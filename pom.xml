@@ -35,10 +35,6 @@
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.exclusions>**/*Configuration.*, **/*Application*.*</sonar.exclusions>
-        <sonar.projectKey>TBG-FR_sample-application-students</sonar.projectKey>
-        <sonar.organization>tbg-fr</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.login>5c8f167d87552c060594ac2f38f127c012042778</sonar.login>
     </properties>
 
     <dependencyManagement>

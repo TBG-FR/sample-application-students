@@ -8,13 +8,22 @@ language: java
 services:
  - docker
 
+addons:
+  sonarcloud:
+    organization: "tbg-fr"
+    token:
+      secure: $SONAR_KEY
+
 #before_install:
 # - docker pull postgres:9.6
 # - docker run -d -p 5432:5432 postgres
 
 script:
- - mvn dependency:go-offline clean verify 
- - mvn verify sonar:sonar
+#  the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+# - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=TBG-FR_sample-application-students
+ - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=TBG-FR_sample-application-students
+# - mvn dependency:go-offline clean verify 
+# - mvn verify sonar:sonar
  - docker build -t db-changelog-job ./sample-application-db-changelog-job/
  - docker build -t http-api-server ./sample-application-http-api-server/
 
