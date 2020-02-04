@@ -24,6 +24,6 @@ notifications:
 deploy:
  provider: script
 # script: ssh -i /tmp/travis_deploy_rsa $USER@$SERVER" sudo docker pull $IMAGE_NAME:$TAG && sudo docker rm -f app || true && sudo docker run -d --network net -p 80:8080 --name app $IMAGE_NAME:$TAG"
- script: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD && docker tag db-changelog-job tbgfr/db-changelog-job:latest && docker push tbgfr/db-changelog-job:latest && docker tag http-api-server tbgfr/http-api-server:latest && docker push tbgfr/http-api-server:latest 
+ script: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD && docker tag db-changelog-job tbgfr/db-changelog-job:develop && docker push tbgfr/db-changelog-job:develop && docker tag http-api-server tbgfr/http-api-server:develop && docker push tbgfr/http-api-server:develop 
  on:
    branch: develop
