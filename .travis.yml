@@ -13,7 +13,7 @@ services:
 # - docker run -d -p 5432:5432 postgres
 
 script:
- - mvn dependency:go-offline clean verify
+ - mvn dependency:go-offline clean verify sonar:sonar
  - docker build -t db-changelog-job ./sample-application-db-changelog-job/
  - docker build -t http-api-server ./sample-application-http-api-server/
 
