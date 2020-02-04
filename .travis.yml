@@ -1,5 +1,4 @@
 language: java
 
 script:
- - mvn dependency:go-offline
- - mvn clean verify
+ - mvn dependency:go-offline clean verify
