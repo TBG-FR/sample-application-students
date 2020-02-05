@@ -1,4 +1,6 @@
 
 FROM openjdk:11-jre
-COPY ./target/*exec.jar ./sample-application-http-api-server.jar
-ENTRYPOINT java -jar sample-application-http-api-server.jar
+ENV HOME_DIR /opt/http-api-server
+WORKDIR $HOME_DIR
+COPY target/*exec.jar runnable.jar
+ENTRYPOINT java -jar runnable.jar
