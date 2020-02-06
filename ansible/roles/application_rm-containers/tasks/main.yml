@@ -1,0 +1,23 @@
+---
+# tasks file for roles/application_rm-containers
+# roles/application_rm-containers/tasks/main.yml
+
+- name: Remove HTTPD
+  docker_container:
+    name: cpe_devops_tp01_frontend_dc
+    state: absent
+
+- name: Remove Database
+  docker_container:
+    name: cpe_devops_tp01_database_dc
+    state: absent
+
+- name: Remove DB Changelogg
+  docker_container:
+    name: db-changelog-job
+    state: absent
+
+- name: Remove Backend
+  docker_container:
+    name: cpe_devops_tp01_backend_dc
+    state: absent

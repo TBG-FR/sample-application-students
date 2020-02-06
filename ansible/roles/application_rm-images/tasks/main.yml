@@ -1,0 +1,23 @@
+---
+# tasks file for roles/application_rm-images
+# roles/application_rm-images/tasks/main.yml
+
+- name: Remove HTTPD
+  docker_image:
+    name: tbgfr/cpe-devops-tp03-frontend:ansible
+    state: absent
+
+- name: Relove Database
+  docker_image:
+    name: tbgfr/cpe-devops-tp03-database:ansible
+    state: absent
+
+- name: Remove DB Changelogg
+  docker_image:
+    name: tbgfr/db-changelog-job:develop
+    state: absent
+
+- name: Remove Backend
+  docker_image:
+    name: tbgfr/http-api-server:develop
+    state: absent

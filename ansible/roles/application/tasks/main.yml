@@ -1,0 +1,50 @@
+---
+# tasks file for roles/application
+# roles/application/tasks/main.yml
+
+- name: Create a network
+  docker_network:
+    name: cpe_devops_tp01_network_dc
+
+- name: Run HTTPD
+  docker_container:
+    #name: httpd
+    name: cpe_devops_tp01_frontend_dc
+    image: tbgfr/cpe-devops-tp03-frontend:ansible
+    ports:
+     - "80:80"
+     - "8008:80"
+    networks:
+      - name: cpe_devops_tp01_network_dc
+
+- name: Run Database
+  docker_container:
+    #name: database
+    name: cpe_devops_tp01_database_dc
+    image: tbgfr/cpe-devops-tp03-database:ansible
+    networks:
+      - name: cpe_devops_tp01_network_dc
+
+- name: Run DB Changelog
+  docker_container:
+    name: db-changelog-job
+    image: tbgfr/db-changelog-job:develop
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cpe_devops_tp01_database_dc:5432/db
+      SPRING_DATASOURCE_USERNAME: usr
+      SPRING_DATASOURCE_PASSWORD: pass
+    networks:
+      - name: cpe_devops_tp01_network_dc
+
+- name: Run Backend
+  docker_container:
+    #name: backend
+    name: cpe_devops_tp01_backend_dc
+    image: tbgfr/http-api-server:develop
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cpe_devops_tp01_database_dc:5432/db
+      SPRING_DATASOURCE_USERNAME: usr
+      SPRING_DATASOURCE_PASSWORD: pass
+    networks:
+      - name: cpe_devops_tp01_network_dc
+      

@@ -1,0 +1,9 @@
+---
+# handlers file for roles/application
+# roles/application/handlers/main.yml
+
+# - name: Make sure Docker is running
+  # service:
+    # name: docker
+    # state: started
+  # tags: docker

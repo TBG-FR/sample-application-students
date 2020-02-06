@@ -1,0 +1,18 @@
+
+- hosts: all
+  gather_facts: false
+  become: yes
+  
+  tasks:    
+    - name: import secret variable file
+      include_vars: "ssh_private_key.yml"
+      #no_log: true
+
+    - name: copy deployment private key
+      copy:
+        content: "{{private_key}}"
+        dest: "/ssh/takima"
+        owner: centos
+        group: centos
+        mode: 0600
+      #no_log: true

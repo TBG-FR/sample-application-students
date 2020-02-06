@@ -19,21 +19,39 @@ addons:
 # - docker run -d -p 5432:5432 postgres
 
 script:
-#  the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-# - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=TBG-FR_sample-application-students
- - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=TBG-FR_sample-application-students
-# - mvn dependency:go-offline clean verify 
-# - mvn verify sonar:sonar
- - docker build -t db-changelog-job ./sample-application-db-changelog-job/
- - docker build -t http-api-server ./sample-application-http-api-server/
-
+##
+##  the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+## - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=TBG-FR_sample-application-students
+#
+# Lancement d'un container CentOS avec Ansible
+ - docker run -d --name ansible_on_centos geerlingguy/docker-centos7-ansible
+#
+# Copie du répertoire Ansible sur le container
+ - docker cp ansible/ ansible_on_centos:/
+##
+## Copie du mot de passe du vault Ansible dans un fichier sur le container
+## - docker exec ansible_on_centos bin/bash -c "echo $ANSIBLE_VAULT_PWD > ansible/vault_passwd"
+#
+# Copie de la clé SSH dans un fichier sur le container
+ - docker exec ansible_on_centos bin/bash -c "mkdir ssh && echo $SSH_PRIVATE_KEY > ssh/takima"
+##
+## Playbook to copy SSH key from encrypted file
+## - docker exec ansible_on_centos bin/bash -c " ansible-playbook ansible/playbook_ssh.yml"
+#
+# Run "Application Remove" playbook to delete container & images if they exist
+ - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml --vault-password-file ansible/vault_passwd ansible/playbook_application-remove.yml"
+#
+# Run "Application" playbook to create containers (deploy app)
+ - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml --vault-password-file ansible/vault_passwd ansible/playbook_application.yml"
+ 
 notifications:
  email:
    on_failure: always
-
-deploy:
- provider: script
-# script: ssh -i /tmp/travis_deploy_rsa $USER@$SERVER" sudo docker pull $IMAGE_NAME:$TAG && sudo docker rm -f app || true && sudo docker run -d --network net -p 80:8080 --name app $IMAGE_NAME:$TAG"
- script: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD && docker tag db-changelog-job tbgfr/db-changelog-job:develop && docker push tbgfr/db-changelog-job:develop && docker tag http-api-server tbgfr/http-api-server:develop && docker push tbgfr/http-api-server:develop 
- on:
-   branch: develop
+   
+#deploy:
+# provider: script
+## script: ssh -i /tmp/travis_deploy_rsa $USER@$SERVER" sudo docker pull $IMAGE_NAME:$TAG && sudo docker rm -f app || true && sudo docker run -d --network net -p 80:8080 --name app $IMAGE_NAME:$TAG"
+# # script: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD && docker tag db-changelog-job tbgfr/db-changelog-job:develop && docker push tbgfr/db-changelog-job:develop && docker tag http-api-server tbgfr/http-api-server:develop && docker push tbgfr/http-api-server:develop 
+# script: ansible-playbook -i inventories/setup.yml playbook_application.yml
+# on:
+#   branch: production
