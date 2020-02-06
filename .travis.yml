@@ -40,6 +40,14 @@ script:
 #
 # Run "Application Remove" playbook to delete container & images if they exist
 # - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml --vault-password-file ansible/vault_passwd ansible/playbook_application-remove.yml"
+ - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml ansible/playbook_ping.yml"
+#
+# Run "Application Remove" playbook to delete container & images if they exist
+# - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml --vault-password-file ansible/vault_passwd ansible/playbook_application-remove.yml"
+ - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml ansible/playbook_docker.yml"
+#
+# Run "Application Remove" playbook to delete container & images if they exist
+# - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml --vault-password-file ansible/vault_passwd ansible/playbook_application-remove.yml"
  - docker exec ansible_on_centos bin/bash -c " ansible-playbook -i ansible/inventories/setup.yml ansible/playbook_application-remove.yml"
 #
 # Run "Application" playbook to create containers (deploy app)
